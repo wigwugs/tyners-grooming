@@ -214,8 +214,8 @@
 
   /* Floating detail card */
   #service-detail-card {
-    position: fixed;
-    z-index: 200;
+    position: absolute;
+    z-index: 20;
     transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
   #service-detail-card.card-hidden {
@@ -496,7 +496,6 @@
       </div>
 
       <div class="animate-on-scroll service-card p-lg bg-surface-container rounded-[32px] border-2 border-outline-variant hover:border-primary"
-           style="transition-delay:0.1s;"
            data-emoji="🛁" data-title="Cat Grooming"
            data-desc="We specialize in low-stress cat grooming using gentle handling techniques that keep your feline calm throughout. Our certified cat groomers offer everything from a simple bath to full lion cuts and deshedding — all in a dog-free environment."
            data-features="Stress-free handling|Lion cuts &amp; trims|Gentle deshedding|Nail trim|Sanitary clean"
@@ -512,7 +511,6 @@
       </div>
 
       <div class="animate-on-scroll service-card p-lg bg-surface-container rounded-[32px] border-2 border-outline-variant hover:border-primary"
-           style="transition-delay:0.2s;"
            data-emoji="🧼" data-title="Spa &amp; Add-Ons"
            data-desc="Treat your pet to an elevated spa experience. Add-on services can be bundled with any full groom or booked standalone. From soothing blueberry facials to deep conditioning paw pad treatments, these extras leave pets feeling (and smelling) amazing."
            data-features="Blueberry facial scrub|Paw pad balm treatment|Deep conditioning mask|Teeth brushing|Cologne &amp; finishing spritz"
@@ -528,7 +526,6 @@
       </div>
 
       <div class="animate-on-scroll service-card p-lg bg-surface-container rounded-[32px] border-2 border-outline-variant hover:border-primary"
-           style="transition-delay:0.3s;"
            data-emoji="🎨" data-title="Creative Grooming"
            data-desc="Let your pet's personality shine with our creative grooming services. We use only pet-safe, non-toxic dyes and stenciling techniques to craft one-of-a-kind looks — perfect for holidays, photo sessions, or just because your pup deserves to be extra fabulous."
            data-features="Pet-safe temporary dyes|Stencil &amp; stamp designs|Glitter finishes|Holiday themes|Mohawks &amp; creative cuts"
@@ -783,19 +780,33 @@ const sdClose     = document.getElementById('sd-close');
 let activeCard = null;
 let scrollCloseObs = null;
 
+// function positionCard(trigger) {
+//   const r = trigger.getBoundingClientRect();
+//   const cw = 320;
+//   const ch = detailCard.offsetHeight || 440;
+//   const vw = window.innerWidth;
+//   const vh = window.innerHeight;
+//   let left = r.right + 14;
+//   let top  = r.top;
+//   if (left + cw > vw - 12) { left = r.left - cw - 14; }
+//   if (left < 12)            { left = Math.max(12, r.left); top = r.bottom + 14; }
+//   top = Math.min(Math.max(top, 88), vh - ch - 12);
+//   detailCard.style.left = left + 'px';
+//   detailCard.style.top  = top  + 'px';
+// }
+
 function positionCard(trigger) {
   const r = trigger.getBoundingClientRect();
+
   const cw = 320;
   const ch = detailCard.offsetHeight || 440;
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  let left = r.right + 14;
-  let top  = r.top;
-  if (left + cw > vw - 12) { left = r.left - cw - 14; }
-  if (left < 12)            { left = Math.max(12, r.left); top = r.bottom + 14; }
-  top = Math.min(Math.max(top, 88), vh - ch - 12);
-  detailCard.style.left = left + 'px';
-  detailCard.style.top  = top  + 'px';
+
+  // Add scroll offsets because absolute uses document coordinates
+  const left = r.left + window.scrollX + (r.width / 2) - (cw / 2);
+  const top  = r.top  + window.scrollY + (r.height / 2) - (ch / 2);
+
+  detailCard.style.left = `${left}px`;
+  detailCard.style.top  = `${top}px`;
 }
 
 function openCard(trigger) {
