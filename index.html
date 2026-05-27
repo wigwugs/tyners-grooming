@@ -831,6 +831,10 @@ function openCard(trigger) {
   activeCard = trigger;
   trigger.classList.add('border-primary');
 
+  if (activeCard) {
+  activeCard.classList.remove('border-primary');
+}
+
   if (scrollCloseObs) scrollCloseObs.disconnect();
   scrollCloseObs = new IntersectionObserver(([entry]) => {
     if (!entry.isIntersecting) closeCard();
